@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>고기 주문 사이트</title>
+</head>
+<body>
+    <h1>고기 주문 사이트</h1>
+    <form method="POST">
+        <label for="customer_id">아이디 입력:</label>
+        <input type="text" id="customer_id" name="customer_id" required>
+        <button type="submit" name="action" value="direct_pickup">직접 수령</button>
+        <button type="submit" name="action" value="delivery_pickup">배달 수령</button>
+    </form>
+    <form method="GET" action="{{ url_for('admin') }}">
+        <button type="submit">관리자 모드</button>
+    </form>
+    <!-- 플래시 메시지를 숨기려면 아래 코드를 제거하거나 주석 처리하세요 -->
+    {# 
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    #}
+</body>
+</html>

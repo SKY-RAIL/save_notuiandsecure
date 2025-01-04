@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>관리자 모드</title>
+</head>
+<body>
+    <h1>관리자 모드</h1>
+    <form method="POST" action="{{ url_for('admin_action') }}">
+        <label for="password">관리자 비밀번호:</label>
+        <input type="password" name="password" required>
+        <button type="submit" name="action" value="view_orders">직접수령주문내역보기</button>
+        <button type="submit" name="action" value="co">배달수령주문내역보기</button>
+    </form>
+</body>
+</html>

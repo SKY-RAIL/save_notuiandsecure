@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>배달 수령 주문 페이지</title>
+    <script>
+        function validateForm() {
+            var senderName = document.forms["orderForm"]["sender_name"].value;
+            var senderContact = document.forms["orderForm"]["sender_contact"].value;
+            var senderAddress = document.forms["orderForm"]["sender_address"].value;
+            var receiverName = document.forms["orderForm"]["receiver_name"].value;
+            var receiverContact = document.forms["orderForm"]["receiver_contact"].value;
+            var receiverAddress = document.forms["orderForm"]["receiver_address"].value;
+
+            if (!senderName || !senderContact || !senderAddress || !receiverName || !receiverContact || !receiverAddress) {
+                alert("주문 정보를 올바르게 입력해주십시오");
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h1>배달 수령 주문 페이지</h1>
+    <p>이름: {{ customer.name }}</p>
+
+    {% if existing_delivery_order %}
+        <h3>주문 내역</h3>
+        <ul>
+            <li>주문자 성함: {{ existing_delivery_order.sender.name }} / 주문자 연락처: {{ existing_delivery_order.sender.contact }} / 주문자 주소: {{ existing_delivery_order.sender.address }}</li>
+            <li>수령자 성함: {{ existing_delivery_order.receiver.name }} / 수령자 연락처: {{ existing_delivery_order.receiver.contact }} / 수령자 주소: {{ existing_delivery_order.receiver.address }}</li>
+            {% for detail in existing_delivery_order.details %}
+                <li>{{ detail.item }} - {{ detail.quantity }}개 ({{ detail.price }}원)</li>
+            {% endfor %}
+        </ul>
+        <p>총 금액: {{ existing_delivery_order.total_price }}원</p>
+        <form method="POST" action="{{ url_for('delete_delivery_order', customer_id=customer.id) }}">
+            <button type="submit">주문 삭제</button>
+        </form>
+    {% else %}
+        <form method="POST" name="orderForm" onsubmit="return validateForm()">
+            {% for item in meat_items %}
+                <div>
+                    <label>{{ item.name }} ({{ item.price }}원)</label>
+                    <input type="checkbox" name="items" value="{{ item.name }}">
+                    <input type="number" name="quantities" min="1" value="1">
+                </div>
+            {% endfor %}
+            <h3>주문자 정보</h3>
+            <label>주문자 성함:</label>
+            <input type="text" name="sender_name" required><br>
+            <label>주문자 연락처:</label>
+            <input type="text" name="sender_contact" required><br>
+            <label>주문자 주소:</label>
+            <input type="text" name="sender_address" required><br>
+            <h3>수령자 정보</h3>
+            <label>수령자 성함:</label>
+            <input type="text" name="receiver_name" required><br>
+            <label>수령자 연락처:</label>
+            <input type="text" name="receiver_contact" required><br>
+            <label>수령자 주소:</label>
+            <input type="text" name="receiver_address" required><br>
+            <button type="submit">주문 완료</button>
+        </form>
+    {% endif %}
+</body>
+</html>

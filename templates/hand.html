@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>주문 페이지</title>
+</head>
+<body>
+    <h1>주문 페이지</h1>
+    <p>이름: {{ customer.name }}</p>
+
+    {% if existing_order %}
+        <h3>주문 내역</h3>
+        <ul>
+            {% for detail in existing_order.details %}
+                <li>{{ detail.item }} - {{ detail.quantity }}개 ({{ detail.price }}원)</li>
+            {% endfor %}
+        </ul>
+        <p>총 금액: {{ existing_order.total_price }}원</p>
+        <form method="POST" action="{{ url_for('delete_order', customer_id=customer.id) }}">
+            <button type="submit">주문 삭제</button>
+        </form>
+    {% else %}
+        <form method="POST">
+            {% for item in meat_items %}
+                <div>
+                    <label>{{ item.name }} ({{ item.price }}원)</label>
+                    <input type="checkbox" name="items" value="{{ item.name }}">
+                    <input type="number" name="quantities" min="1" value="1">
+                </div>
+            {% endfor %}
+            <button type="submit">주문 완료</button>
+        </form>
+    {% endif %}
+</body>
+</html>
