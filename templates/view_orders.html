@@ -9,7 +9,8 @@
         {% if orders %}
             {% for order in orders.values() %}
                 <li>
-                    주문자: {{ order.customer.name }} / 지점: {{ order.customer.branch }}
+                    주문자: {{ order.customer.name }} / 지점: {{ order.customer.branch }}<br>
+                    주문한 시간: {{ order.order_time }}<br>  <!-- 주문한 시간 추가 -->
                     <ul>
                         {% for detail in order.details %}
                             <li>{{ detail.item }} - {{ detail.quantity }}개 ({{ detail.price }}원)</li>

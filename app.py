@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from people import get_customer_by_id
 from meat import meat_items
+from datetime import datetime  # 주문 시간을 추가하기 위해 datetime을 임포트
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # 세션을 위한 비밀키 설정
@@ -53,7 +54,9 @@ def hand(customer_id):
             order_details.append({"item": item, "quantity": quantity, "price": price})
             total_price += price
 
-        orders[customer_id] = {"customer": customer, "details": order_details, "total_price": total_price}
+        # 주문 시간을 추가하여 주문 내역에 저장
+        order_time = datetime.now().strftime("%Y년 %m월 %d일 %H시 %M분")
+        orders[customer_id] = {"customer": customer, "details": order_details, "total_price": total_price, "order_time": order_time}
         flash("주문이 완료되었습니다.")
         return redirect(url_for("hand", customer_id=customer_id))
     
@@ -133,7 +136,7 @@ def delete_delivery_order(customer_id):
     if customer_id in delivery_orders:
         del delivery_orders[customer_id]
         flash("배달 주문이 취소되었습니다.")
-    return redirect(url_for("car", customer_id=customer_id))  # 수정된 부분
+    return redirect(url_for("car", customer_id=customer_id))
 
 # 관리자 페이지
 @app.route("/admin", methods=["GET", "POST"])
