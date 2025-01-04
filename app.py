@@ -1,7 +1,10 @@
+#app.py 이 주석은 삭제하지 말 것
+
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from people import get_customer_by_id
 from meat import meat_items
-from datetime import datetime  # 주문 시간을 추가하기 위해 datetime을 임포트
+from datetime import datetime
+import pytz  # 추가
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # 세션을 위한 비밀키 설정
@@ -9,6 +12,11 @@ app.secret_key = "your_secret_key"  # 세션을 위한 비밀키 설정
 # 주문 내역을 저장할 딕셔너리
 orders = {}
 delivery_orders = {}
+
+# 한국 시간으로 변환하는 함수
+def get_korean_time():
+    korean_tz = pytz.timezone('Asia/Seoul')
+    return datetime.now(korean_tz).strftime('%Y년 %m월 %d일 %H시 %M분')
 
 # 기본 홈 페이지 (주문 선택)
 @app.route("/", methods=["GET", "POST"])
@@ -54,8 +62,7 @@ def hand(customer_id):
             order_details.append({"item": item, "quantity": quantity, "price": price})
             total_price += price
 
-        # 주문 시간을 추가하여 주문 내역에 저장
-        order_time = datetime.now().strftime("%Y년 %m월 %d일 %H시 %M분")
+        order_time = get_korean_time()  # 한국 시간으로 주문 시간 설정
         orders[customer_id] = {"customer": customer, "details": order_details, "total_price": total_price, "order_time": order_time}
         flash("주문이 완료되었습니다.")
         return redirect(url_for("hand", customer_id=customer_id))
@@ -110,6 +117,7 @@ def car(customer_id):
             order_details.append({"item": item, "quantity": quantity, "price": price})
             total_price += price
 
+        order_time = get_korean_time()  # 한국 시간으로 주문 시간 설정
         delivery_orders[customer_id] = {
             "customer": customer,
             "details": order_details,
@@ -123,7 +131,8 @@ def car(customer_id):
                 "name": receiver_name,
                 "contact": receiver_contact,
                 "address": receiver_address
-            }
+            },
+            "order_time": order_time  # 추가된 부분
         }
         flash("배달 주문이 완료되었습니다.")
         return redirect(url_for("car", customer_id=customer_id))

@@ -11,7 +11,8 @@
                 <li>
                     주문자: {{ order.customer.name }} / 지점: {{ order.customer.branch }}<br>
                     주문자: {{ order.sender.name }} / 연락처: {{ order.sender.contact }} / 주소: {{ order.sender.address }}<br>
-                    수령자: {{ order.receiver.name }} / 연락처: {{ order.receiver.contact }} / 주소: {{ order.receiver.address }}
+                    수령자: {{ order.receiver.name }} / 연락처: {{ order.receiver.contact }} / 주소: {{ order.receiver.address }}<br>
+                    주문한 시간: {{ order.order_time }} <!-- 주문한 시간 추가 -->
                     <ul>
                         {% for detail in order.details %}
                             <li>{{ detail.item }} - {{ detail.quantity }}개 ({{ detail.price }}원)</li>
