@@ -133,7 +133,7 @@ def delete_delivery_order(customer_id):
     if customer_id in delivery_orders:
         del delivery_orders[customer_id]
         flash("배달 주문이 취소되었습니다.")
-    return redirect(url_for("co"))
+    return redirect(url_for("car", customer_id=customer_id))  # 수정된 부분
 
 # 관리자 페이지
 @app.route("/admin", methods=["GET", "POST"])
@@ -162,20 +162,12 @@ def admin_action():
 @app.route("/view_orders", methods=["GET"])
 def view_orders():
     # 관리자가 로그인한 상태일 때만 접근 가능
-    if 'admin_logged_in' not in session:
-        flash("관리자 로그인 후 접근 가능합니다.")
-        return redirect(url_for('admin'))
-    
     return render_template("view_orders.html", orders=orders)
 
 # 배달 수령 주문 내역 보기
 @app.route("/co", methods=["GET"])
 def co():
     # 관리자가 로그인한 상태일 때만 접근 가능
-    if 'admin_logged_in' not in session:
-        flash("관리자 로그인 후 접근 가능합니다.")
-        return redirect(url_for('admin'))
-
     return render_template("co.html", delivery_orders=delivery_orders)
 
 if __name__ == "__main__":
