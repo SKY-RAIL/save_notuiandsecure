@@ -27,48 +27,51 @@
     <h1>배달 수령 주문 페이지</h1>
     <p>이름: {{ customer.name }}</p>
 
-    {% if existing_delivery_order %}
+    {% if existing_delivery_orders %}
         <h3>주문 내역</h3>
+        {% for order in existing_delivery_orders %}
         <ul>
-            <li>주문자 성함: {{ existing_delivery_order.sender.name }} / 주문자 연락처: {{ existing_delivery_order.sender.contact }} / 주문자 주소: {{ existing_delivery_order.sender.address }}</li>
-            <li>수령자 성함: {{ existing_delivery_order.receiver.name }} / 수령자 연락처: {{ existing_delivery_order.receiver.contact }} / 수령자 주소: {{ existing_delivery_order.receiver.address }}</li>
-            {% for detail in existing_delivery_order.details %}
+            <li>주문자 성함: {{ order.sender.name }} / 주문자 연락처: {{ order.sender.contact }} / 주문자 주소: {{ order.sender.address }}</li>
+            <li>수령자 성함: {{ order.receiver.name }} / 수령자 연락처: {{ order.receiver.contact }} / 수령자 주소: {{ order.receiver.address }}</li>
+            {% for detail in order.details %}
                 <li>{{ detail.item }} - {{ detail.quantity }}개 ({{ detail.price }}원)</li>
             {% endfor %}
+            <li>실적인정번호: {{ order.recognition_number }}</li>
+            <li>총 금액: {{ order.total_price }}원</li>
         </ul>
-        <p>실적인정번호: {{ existing_delivery_order.recognition_number }}</p>
-        <p>총 금액: {{ existing_delivery_order.total_price }}원</p>
-        <form method="POST" action="{{ url_for('delete_delivery_order', customer_id=customer.id) }}">
+        <form method="POST" action="{{ url_for('delete_delivery_order', customer_id=customer.id, order_index=loop.index0) }}">
             <button type="submit">주문 삭제</button>
         </form>
-    {% else %}
-        <form method="POST" name="orderForm" onsubmit="return validateForm()">
-            {% for item in meat_items %}
-                <div>
-                    <label>{{ item.name }} ({{ item.price }}원)</label>
-                    <input type="checkbox" name="items" value="{{ item.name }}">
-                    <input type="number" name="quantities" min="1" value="1">
-                </div>
-            {% endfor %}
-            <h3>주문자 정보</h3>
-            <label>주문자 성함:</label>
-            <input type="text" name="sender_name" required><br>
-            <label>주문자 연락처:</label>
-            <input type="text" name="sender_contact" required><br>
-            <label>주문자 주소:</label>
-            <input type="text" name="sender_address" required><br>
-            <h3>수령자 정보</h3>
-            <label>수령자 성함:</label>
-            <input type="text" name="receiver_name" required><br>
-            <label>수령자 연락처:</label>
-            <input type="text" name="receiver_contact" required><br>
-            <label>수령자 주소:</label>
-            <input type="text" name="receiver_address" required><br>
-            <h3>실적인정번호</h3>
-            <label>실적인정번호:</label>
-            <input type="text" name="recognition_number" required><br>
-            <button type="submit">주문 완료</button>
-        </form>
+    {% endfor %}
+    
     {% endif %}
+
+    <form method="POST" name="orderForm" onsubmit="return validateForm()">
+        {% for item in meat_items %}
+            <div>
+                <label>{{ item.name }} ({{ item.price }}원)</label>
+                <input type="checkbox" name="items" value="{{ item.name }}">
+                <input type="number" name="quantities" min="1" value="1">
+            </div>
+        {% endfor %}
+        <h3>주문자 정보</h3>
+        <label>주문자 성함:</label>
+        <input type="text" name="sender_name" required><br>
+        <label>주문자 연락처:</label>
+        <input type="text" name="sender_contact" required><br>
+        <label>주문자 주소:</label>
+        <input type="text" name="sender_address" required><br>
+        <h3>수령자 정보</h3>
+        <label>수령자 성함:</label>
+        <input type="text" name="receiver_name" required><br>
+        <label>수령자 연락처:</label>
+        <input type="text" name="receiver_contact" required><br>
+        <label>수령자 주소:</label>
+        <input type="text" name="receiver_address" required><br>
+        <h3>실적인정번호</h3>
+        <label>실적인정번호:</label>
+        <input type="text" name="recognition_number" required><br>
+        <button type="submit">주문 완료</button>
+    </form>
 </body>
 </html>

@@ -98,7 +98,8 @@ def car(customer_id):
         flash("올바르지 않은 아이디입니다.")
         return redirect(url_for("index"))
 
-    existing_delivery_order = delivery_orders.get(customer_id)
+    # 기존 주문 내역을 가져옵니다. 여러 건의 주문이 가능하도록 리스트로 변경합니다.
+    existing_delivery_orders = delivery_orders.get(customer_id, [])
 
     if request.method == "POST":
         sender_name = request.form.get("sender_name")
@@ -113,10 +114,7 @@ def car(customer_id):
             flash("주문 정보를 올바르게 입력해주십시오")
             return redirect(url_for("car", customer_id=customer_id))
 
-        if existing_delivery_order:
-            flash("이미 배달 주문을 완료한 고객입니다.")
-            return redirect(url_for("car", customer_id=customer_id))
-
+        # 여러 개의 주문을 받을 수 있도록 폼 데이터를 처리합니다.
         selected_items = request.form.getlist("items")
         quantities = request.form.getlist("quantities")
 
@@ -133,7 +131,7 @@ def car(customer_id):
         total_price_with_delivery = calculate_total_with_delivery_fee(total_price)
 
         order_time = get_korean_time()
-        delivery_orders[customer_id] = {
+        new_order = {
             "customer": customer,
             "details": order_details,
             "total_price": total_price_with_delivery,  # 배송비 포함된 총 금액 저장
@@ -150,20 +148,32 @@ def car(customer_id):
             "recognition_number": recognition_number,
             "order_time": order_time
         }
+
+        # 고객의 배달 주문 목록에 새로운 주문을 추가합니다.
+        if customer_id not in delivery_orders:
+            delivery_orders[customer_id] = []
+        delivery_orders[customer_id].append(new_order)
+
         flash("배달 주문이 완료되었습니다.")
         return redirect(url_for("car", customer_id=customer_id))
 
-    return render_template("car.html", customer=customer, meat_items=meat_items, existing_delivery_order=existing_delivery_order)
+    return render_template("car.html", customer=customer, meat_items=meat_items, existing_delivery_orders=existing_delivery_orders)
+
 
 
 
 # 배달 주문 삭제
-@app.route("/delete_delivery_order/<customer_id>", methods=["POST"])
-def delete_delivery_order(customer_id):
+@app.route("/delete_delivery_order/<customer_id>/<order_index>", methods=["POST"])
+def delete_delivery_order(customer_id, order_index):
     if customer_id in delivery_orders:
-        del delivery_orders[customer_id]
-        flash("배달 주문이 취소되었습니다.")
+        try:
+            # 고객의 배달 주문 리스트에서 해당 주문 인덱스를 찾아 삭제
+            del delivery_orders[customer_id][int(order_index)]
+            flash("배달 주문이 취소되었습니다.")
+        except IndexError:
+            flash("주문을 찾을 수 없습니다.")
     return redirect(url_for("car", customer_id=customer_id))
+
 
 # 관리자 페이지
 @app.route("/admin", methods=["GET", "POST"])
