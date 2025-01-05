@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>배달 수령 주문 페이지</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
     <script>
         function validateForm() {
             var senderName = document.forms["orderForm"]["sender_name"].value;
@@ -10,8 +11,9 @@
             var receiverName = document.forms["orderForm"]["receiver_name"].value;
             var receiverContact = document.forms["orderForm"]["receiver_contact"].value;
             var receiverAddress = document.forms["orderForm"]["receiver_address"].value;
+            var recognitionNumber = document.forms["orderForm"]["recognition_number"].value;
 
-            if (!senderName || !senderContact || !senderAddress || !receiverName || !receiverContact || !receiverAddress) {
+            if (!senderName || !senderContact || !senderAddress || !receiverName || !receiverContact || !receiverAddress || !recognitionNumber) {
                 alert("주문 정보를 올바르게 입력해주십시오");
                 return false;
             }
@@ -20,7 +22,6 @@
     </script>
 </head>
 <body>
-    <!-- "안양축산농협" 링크 추가 -->
     <a href="{{ url_for('index') }}">-안양축산농협-</a>
 
     <h1>배달 수령 주문 페이지</h1>
@@ -35,6 +36,7 @@
                 <li>{{ detail.item }} - {{ detail.quantity }}개 ({{ detail.price }}원)</li>
             {% endfor %}
         </ul>
+        <p>실적인정번호: {{ existing_delivery_order.recognition_number }}</p>
         <p>총 금액: {{ existing_delivery_order.total_price }}원</p>
         <form method="POST" action="{{ url_for('delete_delivery_order', customer_id=customer.id) }}">
             <button type="submit">주문 삭제</button>
@@ -62,6 +64,9 @@
             <input type="text" name="receiver_contact" required><br>
             <label>수령자 주소:</label>
             <input type="text" name="receiver_address" required><br>
+            <h3>실적인정번호</h3>
+            <label>실적인정번호:</label>
+            <input type="text" name="recognition_number" required><br>
             <button type="submit">주문 완료</button>
         </form>
     {% endif %}

@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>고기 주문 사이트</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <h1>고기 주문 사이트</h1>
@@ -14,17 +15,5 @@
     <form method="GET" action="{{ url_for('admin') }}">
         <button type="submit">관리자 모드</button>
     </form>
-    <!-- 플래시 메시지를 숨기려면 아래 코드를 제거하거나 주석 처리하세요 -->
-    {# 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-    #}
 </body>
 </html>

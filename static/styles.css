@@ -1,0 +1,112 @@
+/* styles.css */
+
+/* 기본 페이지 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+/* 헤더 스타일 */
+a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    margin: 10px;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px;
+    color: #333;
+}
+
+/* 폼 및 버튼 스타일 */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+label {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+input[type="text"], input[type="number"], input[type="password"] {
+    padding: 8px;
+    font-size: 16px;
+    width: 250px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* 플래시 메시지 스타일 */
+.flash {
+    background-color: #f44336;
+    color: white;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+/* 테이블 및 목록 스타일 */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 15px;
+}
+
+ul li {
+    font-size: 16px;
+}
+
+/* 주문 페이지 및 세부사항 스타일 */
+.order-details {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.order-details h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.order-details ul {
+    margin: 10px 0;
+}
+
+/* 주문 삭제 버튼 */
+form button[type="submit"] {
+    background-color: #f44336;
+    margin-top: 20px;
+}
+
+form button[type="submit"]:hover {
+    background-color: #e53935;
+}

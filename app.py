@@ -18,6 +18,12 @@ def get_korean_time():
     korean_tz = pytz.timezone('Asia/Seoul')
     return datetime.now(korean_tz).strftime('%Y년 %m월 %d일 %H시 %M분')
 
+# 배달 수령 주문 총 금액에 배송비를 추가하는 함수
+DELIVERY_FEE = 5000  # 현재 설정된 배송비
+def calculate_total_with_delivery_fee(total_price):
+    return total_price + DELIVERY_FEE  # 향후 배송비가 변경될 경우 이 값을 수정
+
+
 # 기본 홈 페이지 (주문 선택)
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -52,6 +58,7 @@ def hand(customer_id):
 
         selected_items = request.form.getlist("items")
         quantities = request.form.getlist("quantities")
+        recognition_number = request.form.get("recognition_number")
         order_details = []
         total_price = 0
 
@@ -63,10 +70,16 @@ def hand(customer_id):
             total_price += price
 
         order_time = get_korean_time()  # 한국 시간으로 주문 시간 설정
-        orders[customer_id] = {"customer": customer, "details": order_details, "total_price": total_price, "order_time": order_time}
+        orders[customer_id] = {
+            "customer": customer,
+            "details": order_details,
+            "total_price": total_price,
+            "order_time": order_time,
+            "recognition_number": recognition_number,
+        }
         flash("주문이 완료되었습니다.")
         return redirect(url_for("hand", customer_id=customer_id))
-    
+
     return render_template("hand.html", customer=customer, meat_items=meat_items, existing_order=existing_order)
 
 # 주문 삭제
@@ -94,9 +107,9 @@ def car(customer_id):
         receiver_name = request.form.get("receiver_name")
         receiver_contact = request.form.get("receiver_contact")
         receiver_address = request.form.get("receiver_address")
+        recognition_number = request.form.get("recognition_number")
 
-        # 필수 정보 체크
-        if not all([sender_name, sender_contact, sender_address, receiver_name, receiver_contact, receiver_address]):
+        if not all([sender_name, sender_contact, sender_address, receiver_name, receiver_contact, receiver_address, recognition_number]):
             flash("주문 정보를 올바르게 입력해주십시오")
             return redirect(url_for("car", customer_id=customer_id))
 
@@ -117,11 +130,13 @@ def car(customer_id):
             order_details.append({"item": item, "quantity": quantity, "price": price})
             total_price += price
 
-        order_time = get_korean_time()  # 한국 시간으로 주문 시간 설정
+        total_price_with_delivery = calculate_total_with_delivery_fee(total_price)
+
+        order_time = get_korean_time()
         delivery_orders[customer_id] = {
             "customer": customer,
             "details": order_details,
-            "total_price": total_price,
+            "total_price": total_price_with_delivery,  # 배송비 포함된 총 금액 저장
             "sender": {
                 "name": sender_name,
                 "contact": sender_contact,
@@ -132,12 +147,15 @@ def car(customer_id):
                 "contact": receiver_contact,
                 "address": receiver_address
             },
-            "order_time": order_time  # 추가된 부분
+            "recognition_number": recognition_number,
+            "order_time": order_time
         }
         flash("배달 주문이 완료되었습니다.")
         return redirect(url_for("car", customer_id=customer_id))
-    
+
     return render_template("car.html", customer=customer, meat_items=meat_items, existing_delivery_order=existing_delivery_order)
+
+
 
 # 배달 주문 삭제
 @app.route("/delete_delivery_order/<customer_id>", methods=["POST"])
@@ -180,7 +198,8 @@ def view_orders():
 @app.route("/co", methods=["GET"])
 def co():
     # 관리자가 로그인한 상태일 때만 접근 가능
-    return render_template("co.html", delivery_orders=delivery_orders)
+    return render_template("co.html", delivery_orders=delivery_orders, delivery_fee=DELIVERY_FEE)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
