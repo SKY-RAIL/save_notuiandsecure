@@ -1,34 +1,77 @@
-<!-- co.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>배달 주문 내역 확인</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
     <h1>배달 주문 내역 확인</h1>
-    <ul>
-        {% if delivery_orders %}
-            {% for orders in delivery_orders.values() %}
-                {% for order in orders %}
-                    <li>
-                        주문자: {{ order.customer.name }} / 지점: {{ order.customer.branch }}<br>
-                        주문자: {{ order.sender.name }} / 연락처: {{ order.sender.contact }} / 주소: {{ order.sender.address }}<br>
-                        수령자: {{ order.receiver.name }} / 연락처: {{ order.receiver.contact }} / 주소: {{ order.receiver.address }}<br>
-                        실적인정번호: {{ order.recognition_number }}<br>
-                        {% for detail in order.details %}
-                            {{ detail.item }} - {{ detail.quantity }}개 ({{ detail.price }}원)<br>
-                        {% endfor %}
-                        총 금액: {{ order.total_price }}원 <!-- 배송비가 이미 포함되어 있습니다. -->
-                    </li>
-                    <form method="POST" action="{{ url_for('delete_delivery_order', customer_id=order.customer.id, order_index=loop.index0) }}">
-                        <button type="submit">주문 삭제</button>
-                    </form>
-                    
+
+    {% if delivery_orders %}
+        <table>
+            <thead>
+                <tr>
+                    <th>주문자</th>
+                    <th>지점</th>
+                    <th>주문자 성함</th>
+                    <th>주문자 연락처</th>
+                    <th>주문자 주소</th>
+                    <th>수령자 성함</th>
+                    <th>수령자 연락처</th>
+                    <th>수령자 주소</th>
+                    <th>주문한 시간</th>
+                    <th>주문한 품목</th>
+                    <th>실적인정번호</th>
+                    <th>총금액</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for orders in delivery_orders.values() %}
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{ order.customer.name }}</td>
+                            <td>{{ order.customer.branch }}</td>
+                            <td>{{ order.sender.name }}</td>
+                            <td>{{ order.sender.contact }}</td>
+                            <td>{{ order.sender.address }}</td>
+                            <td>{{ order.receiver.name }}</td>
+                            <td>{{ order.receiver.contact }}</td>
+                            <td>{{ order.receiver.address }}</td>
+                            <td>{{ order.order_time }}</td>
+                            <td>
+                                {% for detail in order.details %}
+                                    {{ detail.item }} - {{ detail.quantity }}개 ({{ detail.price }}원)<br>
+                                {% endfor %}
+                            </td>
+                            <td>{{ order.recognition_number }}</td>
+                            <td>{{ order.total_price }}원</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('delete_delivery_order', customer_id=order.customer.id, order_index=loop.index0) }}">
+                                    <button type="submit">주문 삭제</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
-        {% endif %}
-    </ul>
+            </tbody>
+        </table>
+    {% else %}
+        <p>배달 주문이 없습니다.</p>
+    {% endif %}
 </body>
 </html>
-
