@@ -202,13 +202,13 @@ def admin_action():
 @app.route("/view_orders", methods=["GET"])
 def view_orders():
     # 관리자가 로그인한 상태일 때만 접근 가능
-    return render_template("view_orders.html", orders=orders)
+    return render_template("view_orders.html", orders=orders, meat_items=meat_items)
 
 # 배달 수령 주문 내역 보기
 @app.route("/co", methods=["GET"])
 def co():
     # 관리자가 로그인한 상태일 때만 접근 가능
-    return render_template("co.html", delivery_orders=delivery_orders, delivery_fee=DELIVERY_FEE)
+    return render_template("co.html", delivery_orders=delivery_orders, meat_items=meat_items)
 
 
 if __name__ == "__main__":
