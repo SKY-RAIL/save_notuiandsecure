@@ -1,6 +1,6 @@
 #app.py 이 주석은 삭제하지 말 것
 
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, Response
 from people import get_customer_by_id
 from meat import meat_items
 from datetime import datetime
@@ -209,6 +209,68 @@ def view_orders():
 def co():
     # 관리자가 로그인한 상태일 때만 접근 가능
     return render_template("co.html", delivery_orders=delivery_orders, meat_items=meat_items)
+
+@app.route("/download_orders", methods=["GET"])
+def download_orders():
+    # 주문 데이터를 메모장 형식으로 변환
+    orders_text = "주문자,지점,주문자 성함,주문자 연락처,주문자 주소,수령자 성함,수령자 연락처,수령자 주소,주문한 시간,"
+    
+    # 고기 항목 이름을 추가
+    for item in meat_items:
+        orders_text += f"{item['name']},"
+    
+    orders_text += "실적인정번호,총 금액\n"
+    
+    for customer_id, order in orders.items():
+        orders_text += f"{order['customer']['name']},{order['customer']['branch']},{order['customer']['name']},{''},{''},{''},{''},{''},{order['order_time']},"
+        
+        # 고기 항목별로 수량을 추가
+        for item in meat_items:
+            quantity = 0
+            for detail in order["details"]:
+                if detail["item"] == item["name"]:
+                    quantity = detail["quantity"]
+                    break
+            orders_text += f"{quantity}개,"
+        
+        orders_text += f"{order['recognition_number']},{order['total_price']}\n"
+
+    # 메모장 형식으로 반환
+    return Response(
+        orders_text,
+        mimetype="text/plain",
+        headers={"Content-Disposition": "attachment;filename=orders.txt"},
+    )
+
+
+
+@app.route("/download_delivery_orders", methods=["GET"])
+def download_delivery_orders():
+    # 배달 주문 데이터를 메모장 형식으로 변환
+    delivery_orders_text = "주문자,지점,주문자 성함,주문자 연락처,주문자 주소,수령자 성함,수령자 연락처,수령자 주소,주문한 시간,"
+    
+    # 고기 품목을 다운로드 텍스트에 동적으로 추가
+    delivery_orders_text += ",".join([item["name"] for item in meat_items])
+    delivery_orders_text += ",실적인정번호,총 금액\n"
+
+    for customer_id, orders_list in delivery_orders.items():
+        for order in orders_list:
+            delivery_orders_text += f"{order['customer']['name']},{order['customer']['branch']},{order['sender']['name']},{order['sender']['contact']},{order['sender']['address']},{order['receiver']['name']},{order['receiver']['contact']},{order['receiver']['address']},{order['order_time']},"
+            
+            # 고기 품목 수량을 동적으로 출력
+            for item in meat_items:
+                quantity = next((detail['quantity'] for detail in order['details'] if detail['item'] == item['name']), 0)
+                delivery_orders_text += f"{quantity}개,"
+            
+            delivery_orders_text += f"{order['recognition_number']},{order['total_price']}원\n"
+
+    # 메모장 형식으로 반환
+    return Response(
+        delivery_orders_text,
+        mimetype="text/plain",
+        headers={"Content-Disposition": "attachment;filename=delivery_orders.txt"},
+    )
+
 
 
 if __name__ == "__main__":

@@ -21,7 +21,10 @@
 </head>
 <body>
     <h1>배달 주문 내역 확인</h1>
-
+    <a href="{{ url_for('download_delivery_orders') }}">
+        <button>배달 주문 내역 다운로드 (메모장)</button>
+    </a>
+    
     {% if delivery_orders %}
         <table>
             <thead>
