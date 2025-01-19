@@ -233,7 +233,7 @@ def download_orders():
                     break
             orders_text += f"{quantity}개,"
         
-        orders_text += f"{order['recognition_number']},{order['total_price']}\n"
+        orders_text += f"{order['recognition_number']},{order['total_price']}원\n"
 
     # 메모장 형식으로 반환
     return Response(
