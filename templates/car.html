@@ -52,7 +52,7 @@
             <div>
                 <label>{{ item.name }} ({{ item.price }}원)</label>
                 <input type="checkbox" name="items" value="{{ item.name }}">
-                <input type="number" name="quantities" min="1" value="1">
+                <input type="number" name="quantities_{{ item.name }}" min="1" value="1">
             </div>
         {% endfor %}
         <h3>주문자 정보</h3>

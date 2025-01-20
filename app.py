@@ -118,18 +118,14 @@ def car(customer_id):
         order_details = []
         total_price = 0
 
-        for item, quantity in zip(selected_items, quantities):
-            try:
-                quantity = int(quantity)  # 수량을 정수형으로 변환
-            except ValueError:
-                quantity = 0  # 잘못된 수량 처리
-
-            if quantity > 0:  # 0 이하의 수량은 무시
-                meat_item = next((m for m in meat_items if m["name"] == item), None)
-                if meat_item:
-                    price = meat_item["price"] * quantity
-                    order_details.append({"item": item, "quantity": quantity, "price": price})
-                    total_price += price
+        for item in selected_items:
+            quantity_field = f"quantities_{item}"
+            quantity = int(request.form.get(quantity_field, 1))  # 기본값 1
+            meat_item = next((m for m in meat_items if m["name"] == item), None)
+            if meat_item:
+                price = meat_item["price"] * quantity
+                order_details.append({"item": item, "quantity": quantity, "price": price})
+                total_price += price
 
         total_price_with_delivery = calculate_total_with_delivery_fee(total_price)
 
