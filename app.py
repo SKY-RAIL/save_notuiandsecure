@@ -56,14 +56,13 @@ def hand(customer_id):
             flash("이미 주문을 완료한 고객입니다.")
             return redirect(url_for("hand", customer_id=customer_id))
 
-        selected_items = request.form.getlist("items")
-        quantities = request.form.getlist("quantities")
-        recognition_number = request.form.get("recognition_number")
+        selected_items = request.form.getlist("items")  # 선택된 품목
         order_details = []
         total_price = 0
 
-        for item, quantity in zip(selected_items, quantities):
-            quantity = int(quantity)
+        for item in selected_items:
+            quantity_field = f"quantities_{item}"
+            quantity = int(request.form.get(quantity_field, 1))  # 기본값 1
             meat_item = next(m for m in meat_items if m["name"] == item)
             price = meat_item["price"] * quantity
             order_details.append({"item": item, "quantity": quantity, "price": price})
@@ -75,7 +74,7 @@ def hand(customer_id):
             "details": order_details,
             "total_price": total_price,
             "order_time": order_time,
-            "recognition_number": recognition_number,
+            "recognition_number": request.form.get("recognition_number"),
         }
         flash("주문이 완료되었습니다.")
         return redirect(url_for("hand", customer_id=customer_id))
@@ -98,7 +97,6 @@ def car(customer_id):
         flash("올바르지 않은 아이디입니다.")
         return redirect(url_for("index"))
 
-    # 기존 주문 내역을 가져옵니다. 여러 건의 주문이 가능하도록 리스트로 변경합니다.
     existing_delivery_orders = delivery_orders.get(customer_id, [])
 
     if request.method == "POST":
@@ -114,7 +112,6 @@ def car(customer_id):
             flash("주문 정보를 올바르게 입력해주십시오")
             return redirect(url_for("car", customer_id=customer_id))
 
-        # 여러 개의 주문을 받을 수 있도록 폼 데이터를 처리합니다.
         selected_items = request.form.getlist("items")
         quantities = request.form.getlist("quantities")
 
@@ -122,11 +119,17 @@ def car(customer_id):
         total_price = 0
 
         for item, quantity in zip(selected_items, quantities):
-            quantity = int(quantity)
-            meat_item = next(m for m in meat_items if m["name"] == item)
-            price = meat_item["price"] * quantity
-            order_details.append({"item": item, "quantity": quantity, "price": price})
-            total_price += price
+            try:
+                quantity = int(quantity)  # 수량을 정수형으로 변환
+            except ValueError:
+                quantity = 0  # 잘못된 수량 처리
+
+            if quantity > 0:  # 0 이하의 수량은 무시
+                meat_item = next((m for m in meat_items if m["name"] == item), None)
+                if meat_item:
+                    price = meat_item["price"] * quantity
+                    order_details.append({"item": item, "quantity": quantity, "price": price})
+                    total_price += price
 
         total_price_with_delivery = calculate_total_with_delivery_fee(total_price)
 
@@ -134,7 +137,7 @@ def car(customer_id):
         new_order = {
             "customer": customer,
             "details": order_details,
-            "total_price": total_price_with_delivery,  # 배송비 포함된 총 금액 저장
+            "total_price": total_price_with_delivery,
             "sender": {
                 "name": sender_name,
                 "contact": sender_contact,
@@ -149,7 +152,6 @@ def car(customer_id):
             "order_time": order_time
         }
 
-        # 고객의 배달 주문 목록에 새로운 주문을 추가합니다.
         if customer_id not in delivery_orders:
             delivery_orders[customer_id] = []
         delivery_orders[customer_id].append(new_order)

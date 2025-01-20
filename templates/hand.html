@@ -29,13 +29,13 @@
                 <div>
                     <label>{{ item.name }} ({{ item.price }}원)</label>
                     <input type="checkbox" name="items" value="{{ item.name }}">
-                    <input type="number" name="quantities" min="1" value="1">
+                    <input type="number" name="quantities_{{ item.name }}" min="1" value="1">
                 </div>
             {% endfor %}
             <label>실적인정번호:</label>
             <input type="text" name="recognition_number" required><br>
             <button type="submit">주문 완료</button>
-        </form>
+        </form>    
     {% endif %}
 </body>
 </html>
