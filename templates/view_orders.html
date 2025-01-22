@@ -1,89 +1,88 @@
-<!--view_orders.html-->
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>주문 내역 확인</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>주문 내역 확인</h1>
-    <a href="{{ url_for('download_orders') }}">
-        <button>주문 내역 다운로드 (메모장)</button>
-    </a>
-    
-    {% if orders %}
-        <table>
-            <thead>
-                <tr>
-                    <th>주문자</th>
-                    <th>지점</th>
-                    <th>주문자 성함</th>
-                    <th>주문자 연락처</th>
-                    <th>주문자 주소</th>
-                    <th>수령자 성함</th>
-                    <th>수령자 연락처</th>
-                    <th>수령자 주소</th>
-                    <th>주문한 시간</th>
-                    <!-- 동적으로 고기 품목 헤더 생성 -->
-                    {% for item in meat_items %}
-                        <th>{{ item.name }}</th>
-                    {% endfor %}
-                    <th>실적인정번호</th>
-                    <th>총 금액</th>
-                    <th>삭제</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in orders.values() %}
-                    <tr>
-                        <td>{{ order.customer.name }}</td>
-                        <td>{{ order.customer.branch }}</td>
-                        <td>{{ order.sender.name if order.sender else '' }}</td>
-                        <td>{{ order.sender.contact if order.sender else '' }}</td>
-                        <td>{{ order.sender.address if order.sender else '' }}</td>
-                        <td>{{ order.receiver.name if order.receiver else '' }}</td>
-                        <td>{{ order.receiver.contact if order.receiver else '' }}</td>
-                        <td>{{ order.receiver.address if order.receiver else '' }}</td>
-                        <td>{{ order.order_time }}</td>
-                        
-                        <!-- 동적으로 고기 품목 수량 출력 -->
-                        {% for item in meat_items %}
-                            <td>
-                                {% for detail in order.details %}
-                                    {% if detail.item == item.name %}
-                                        {{ detail.quantity }}개
-                                    {% endif %}
-                                {% endfor %}
-                            </td>
-                        {% endfor %}
+    <header>
+        <div class="header-content">
+            <h1>주문 내역 확인</h1>
+            <p>모든 주문 정보를 한눈에 확인하세요!</p>
+        </div>
+    </header>
 
-                        <td>{{ order.recognition_number }}</td>
-                        <td>{{ order.total_price }}원</td>
-                        <td>
-                            <form method="POST" action="{{ url_for('delete_order', customer_id=order.customer.id) }}">
-                                <button type="submit">주문 삭제</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>주문 내역이 없습니다.</p>
-    {% endif %}
+    <main>
+        <div class="order-form">
+            <a href="{{ url_for('download_orders') }}">
+                <button class="button">주문 내역 다운로드 (메모장)</button>
+            </a>
+
+            {% if orders %}
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>주문자</th>
+                                <th>지점</th>
+                                <th>주문자 성함</th>
+                                <th>주문자 연락처</th>
+                                <th>주문자 주소</th>
+                                <th>수령자 성함</th>
+                                <th>수령자 연락처</th>
+                                <th>수령자 주소</th>
+                                <th>주문한 시간</th>
+                                {% for item in meat_items %}
+                                    <th>{{ item.name }}</th>
+                                {% endfor %}
+                                <th>실적인정번호</th>
+                                <th>총 금액</th>
+                                <th>삭제</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders.values() %}
+                                <tr>
+                                    <td>{{ order.customer.name }}</td>
+                                    <td>{{ order.customer.branch }}</td>
+                                    <td>{{ order.sender.name if order.sender else '' }}</td>
+                                    <td>{{ order.sender.contact if order.sender else '' }}</td>
+                                    <td>{{ order.sender.address if order.sender else '' }}</td>
+                                    <td>{{ order.receiver.name if order.receiver else '' }}</td>
+                                    <td>{{ order.receiver.contact if order.receiver else '' }}</td>
+                                    <td>{{ order.receiver.address if order.receiver else '' }}</td>
+                                    <td>{{ order.order_time }}</td>
+                                    {% for item in meat_items %}
+                                        <td>
+                                            {% for detail in order.details %}
+                                                {% if detail.item == item.name %}
+                                                    {{ detail.quantity }}개
+                                                {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                    {% endfor %}
+                                    <td>{{ order.recognition_number }}</td>
+                                    <td>{{ order.total_price }}원</td>
+                                    <td>
+                                        <form method="POST" action="{{ url_for('delete_order', customer_id=order.customer.id) }}">
+                                            <button class="button" type="submit">주문 삭제</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>주문 내역이 없습니다.</p>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 안양축산농협. All rights reserved.</p>
+    </footer>
 </body>
 </html>

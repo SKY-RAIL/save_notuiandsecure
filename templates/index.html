@@ -1,20 +1,40 @@
-<!--index.html-->
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>고기 주문 사이트</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
-    <h1>고기 주문 사이트</h1>
-    <form method="POST">
-        <label for="customer_id">아이디 입력:</label>
-        <input type="text" id="customer_id" name="customer_id" required>
-        <button type="submit" name="action" value="direct_pickup">직접 수령</button>
-        <button type="submit" name="action" value="delivery_pickup">배달 수령</button>
-    </form>
-    <form method="GET" action="{{ url_for('admin') }}">
-        <button type="submit">관리자 모드</button>
-    </form>
+    <header>
+        <div class="header-content">
+            <h1>고기 주문 사이트 - 안양축산농협</h1>
+            <p>최고의 고기를 손쉽게 주문하세요!</p>
+        </div>
+    </header>
+    
+    <main>
+        <div class="order-form">
+            <form method="POST">
+                <label for="customer_id">아이디 입력:</label>
+                <input type="text" id="customer_id" name="customer_id" required placeholder="아이디를 입력하세요">
+                
+                <div class="buttons">
+                    <button type="submit" name="action" value="direct_pickup" class="button">직접 수령</button>
+                    <button type="submit" name="action" value="delivery_pickup" class="button">배달 수령</button>
+                </div>
+            </form>
+            
+            <form method="GET" action="{{ url_for('admin') }}">
+                <button type="submit" class="admin-button">관리자 모드</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 안양축산농협. All rights reserved.</p>
+    </footer>
 </body>
 </html>

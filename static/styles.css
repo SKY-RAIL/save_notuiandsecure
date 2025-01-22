@@ -1,112 +1,124 @@
-/* styles.css */
-
-/* 기본 페이지 스타일 */
-body {
-    font-family: Arial, sans-serif;
+/* 전반적인 스타일 */
+* {
     margin: 0;
     padding: 0;
-    background-color: #f8f8f8;
-    color: #333;
+    box-sizing: border-box;
 }
 
-/* 헤더 스타일 */
-a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    margin: 10px;
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #ff7e5f, #feb47b); /* 아름다운 배경 그라디언트 */
+    color: white;
 }
 
-h1 {
-    text-align: center;
-    margin: 20px;
-    color: #333;
-}
-
-/* 폼 및 버튼 스타일 */
-form {
+header {
+    background-image: url('https://www.example.com/beef-image.jpg'); /* 배경 이미지 추가 */
+    background-size: cover;
+    background-position: center;
+    height: 300px;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    margin-top: 20px;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    animation: fadeIn 2s ease-in-out;
 }
 
-label {
-    font-size: 16px;
-    margin-bottom: 5px;
+.header-content h1 {
+    font-size: 3rem;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 
-input[type="text"], input[type="number"], input[type="password"] {
-    padding: 8px;
-    font-size: 16px;
-    width: 250px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
+header p {
+    font-size: 1.5rem;
+    margin-top: 10px;
+}
+
+main {
+    padding: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* 폼 스타일 */
+.order-form {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: slideUp 1s ease-out;
+}
+
+.order-form input[type="text"] {
+    padding: 10px;
+    margin: 10px 0;
+    width: 100%;
+    border: none;
     border-radius: 5px;
+    font-size: 1.2rem;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
 }
 
 button {
-    background-color: #4CAF50;
+    background-color: #ff7e5f;
     color: white;
-    font-size: 16px;
-    padding: 10px 20px;
-    margin: 5px 0;
     border: none;
+    padding: 15px 30px;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1.2rem;
 }
 
 button:hover {
+    background-color: #feb47b;
+}
+
+/* 관리자 버튼 */
+button.admin-button {
+    background-color: #4CAF50;
+    margin-top: 20px;
+}
+
+button.admin-button:hover {
     background-color: #45a049;
 }
 
-/* 플래시 메시지 스타일 */
-.flash {
-    background-color: #f44336;
-    color: white;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
+/* 애니메이션 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
-/* 테이블 및 목록 스타일 */
-ul {
-    list-style-type: none;
-    padding: 0;
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
-li {
-    margin-bottom: 15px;
-}
-
-ul li {
-    font-size: 16px;
-}
-
-/* 주문 페이지 및 세부사항 스타일 */
-.order-details {
+/* 푸터 스타일 */
+footer {
+    text-align: center;
+    background-color: #333;
     padding: 20px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-}
-
-.order-details h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-}
-
-.order-details ul {
-    margin: 10px 0;
-}
-
-/* 주문 삭제 버튼 */
-form button[type="submit"] {
-    background-color: #f44336;
-    margin-top: 20px;
-}
-
-form button[type="submit"]:hover {
-    background-color: #e53935;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    color: white;
 }

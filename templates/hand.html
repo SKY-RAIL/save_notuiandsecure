@@ -1,41 +1,105 @@
-<!--hand.html-->
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>주문 페이지</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <a href="{{ url_for('index') }}">-안양축산농협-</a>
+    <header>
+        <div class="header-content">
+            <h1>고기 주문 페이지 - 안양축산농협</h1>
+            <p>최고의 고기를 손쉽게 주문하세요!</p>
+        </div>
+    </header>
 
-    <h1>주문 페이지</h1>
-    <p>이름: {{ customer.name }}</p>
+    <main>
+        <!-- 메인화면으로 돌아가기 버튼 추가 -->
+        <a href="{{ url_for('index') }}" class="link">-메인화면으로 돌아가기-</a>
 
-    {% if existing_order %}
-        <h3>주문 내역</h3>
-        <ul>
-            {% for detail in existing_order.details %}
-                <li>{{ detail.item }} - {{ detail.quantity }}개 ({{ detail.price }}원)</li>
-            {% endfor %}
-        </ul>
-        <p>실적인정번호: {{ existing_order.recognition_number }}</p>
-        <p>총 금액: {{ existing_order.total_price }}원</p>
-        <form method="POST" action="{{ url_for('delete_order', customer_id=customer.id) }}">
-            <button type="submit">주문 삭제</button>
-        </form>
-    {% else %}
-        <form method="POST">
-            {% for item in meat_items %}
-                <div>
-                    <label>{{ item.name }} ({{ item.price }}원)</label>
-                    <input type="checkbox" name="items" value="{{ item.name }}">
-                    <input type="number" name="quantities_{{ item.name }}" min="1" value="1">
-                </div>
-            {% endfor %}
-            <label>실적인정번호:</label>
-            <input type="text" name="recognition_number" required><br>
-            <button type="submit">주문 완료</button>
-        </form>    
-    {% endif %}
+        <div class="order-container">
+            <!-- 주문 내역을 우측에 배치 -->
+            <div class="existing-orders">
+                {% if existing_order %}
+                    <h3>주문 내역</h3>
+                    <ul>
+                        {% for detail in existing_order.details %}
+                            <li>{{ detail.item }} - {{ detail.quantity }}개 ({{ detail.price }}원)</li>
+                        {% endfor %}
+                    </ul>
+                    <p><strong>실적인정번호:</strong> {{ existing_order.recognition_number }}</p>
+                    <p><strong>총 금액:</strong> {{ existing_order.total_price }}원</p>
+                    <form method="POST" action="{{ url_for('delete_order', customer_id=customer.id) }}">
+                        <button type="submit" class="button">주문 삭제</button>
+                    </form>
+                {% endif %}
+            </div>
+
+            <!-- 주문 입력폼을 좌측에 배치 -->
+            <div class="order-form">
+                <h2>주문 정보</h2>
+                <p><strong>이름:</strong> {{ customer.name }}</p>
+
+                {% if not existing_order %}
+                    <form method="POST">
+                        {% for item in meat_items %}
+                            <div>
+                                <label>{{ item.name }} ({{ item.price }}원)</label>
+                                <input type="checkbox" name="items" value="{{ item.name }}">
+                                <input type="number" name="quantities_{{ item.name }}" min="1" value="1" class="quantity-input">
+                            </div>
+                        {% endfor %}
+                        <label>실적인정번호:</label>
+                        <input type="text" name="recognition_number" required class="text-input"><br>
+                        <button type="submit" class="button">주문 완료</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 안양축산농협. All rights reserved.</p>
+    </footer>
+
+    <style>
+        /* 새로운 레이아웃 설정 */
+        .order-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            width: 100%;
+        }
+
+        .order-form {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: slideUp 1s ease-out;
+        }
+
+        .existing-orders {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: slideUp 1s ease-out;
+        }
+
+        .link {
+            color: #ff7e5f;
+            font-size: 1.5rem;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+
+        .link:hover {
+            color: #feb47b;
+        }
+    </style>
 </body>
 </html>

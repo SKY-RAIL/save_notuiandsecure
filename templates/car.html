@@ -1,7 +1,8 @@
-<!--car.html-->
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>배달 수령 주문 페이지</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
     <script>
@@ -23,56 +24,117 @@
     </script>
 </head>
 <body>
-    <a href="{{ url_for('index') }}">-안양축산농협-</a>
-
-    <h1>배달 수령 주문 페이지</h1>
-    <p>이름: {{ customer.name }}</p>
-
-    {% if existing_delivery_orders %}
-        <h3>주문 내역</h3>
-        {% for order in existing_delivery_orders %}
-        <ul>
-            <li>주문자 성함: {{ order.sender.name }} / 주문자 연락처: {{ order.sender.contact }} / 주문자 주소: {{ order.sender.address }}</li>
-            <li>수령자 성함: {{ order.receiver.name }} / 수령자 연락처: {{ order.receiver.contact }} / 수령자 주소: {{ order.receiver.address }}</li>
-            {% for detail in order.details %}
-                <li>{{ detail.item }} - {{ detail.quantity }}개 ({{ detail.price }}원)</li>
-            {% endfor %}
-            <li>실적인정번호: {{ order.recognition_number }}</li>
-            <li>총 금액: {{ order.total_price }}원</li>
-        </ul>
-        <form method="POST" action="{{ url_for('delete_delivery_order', customer_id=customer.id, order_index=loop.index0) }}">
-            <button type="submit">주문 삭제</button>
-        </form>
-    {% endfor %}
+    <header>
+        <div class="header-content">
+            <h1>배달 수령 주문 페이지</h1>
+            <p>주문 정보를 입력하고 확인하세요</p>
+        </div>
+    </header>
     
-    {% endif %}
-
-    <form method="POST" name="orderForm" onsubmit="return validateForm()">
-        {% for item in meat_items %}
-            <div>
-                <label>{{ item.name }} ({{ item.price }}원)</label>
-                <input type="checkbox" name="items" value="{{ item.name }}">
-                <input type="number" name="quantities_{{ item.name }}" min="1" value="1">
+    <main>
+        <!-- "메인화면으로 돌아가기"로 링크 수정 -->
+        <a href="{{ url_for('index') }}" class="link">-메인화면으로 돌아가기-</a>
+        
+        <div class="order-container">
+            <!-- 기존 주문 내역을 우측에 배치 -->
+            <div class="existing-orders">
+                <h3>기존 주문 내역</h3>
+                {% if existing_delivery_orders %}
+                    {% for order in existing_delivery_orders %}
+                        <ul>
+                            <li>주문자 성함: {{ order.sender.name }}</li>
+                            <li>주문자 연락처: {{ order.sender.contact }}</li>
+                            <li>주문자 주소: {{ order.sender.address }}</li>
+                            <li>수령자 성함: {{ order.receiver.name }}</li>
+                            <li>수령자 연락처: {{ order.receiver.contact }}</li>
+                            <li>수령자 주소: {{ order.receiver.address }}</li>
+                            {% for detail in order.details %}
+                                <li>{{ detail.item }} - {{ detail.quantity }}개 ({{ detail.price }}원)</li>
+                            {% endfor %}
+                            <li>실적인정번호: {{ order.recognition_number }}</li>
+                            <li>총 금액: {{ order.total_price }}원</li>
+                        </ul>
+                        <form method="POST" action="{{ url_for('delete_delivery_order', customer_id=customer.id, order_index=loop.index0) }}">
+                            <button type="submit">주문 삭제</button>
+                        </form>
+                    {% endfor %}
+                {% endif %}
             </div>
-        {% endfor %}
-        <h3>주문자 정보</h3>
-        <label>주문자 성함:</label>
-        <input type="text" name="sender_name" required><br>
-        <label>주문자 연락처:</label>
-        <input type="text" name="sender_contact" required><br>
-        <label>주문자 주소:</label>
-        <input type="text" name="sender_address" required><br>
-        <h3>수령자 정보</h3>
-        <label>수령자 성함:</label>
-        <input type="text" name="receiver_name" required><br>
-        <label>수령자 연락처:</label>
-        <input type="text" name="receiver_contact" required><br>
-        <label>수령자 주소:</label>
-        <input type="text" name="receiver_address" required><br>
-        <h3>실적인정번호</h3>
-        <label>실적인정번호:</label>
-        <input type="text" name="recognition_number" required><br>
-        <button type="submit">주문 완료</button>
-    </form>
+
+            <!-- 주문 입력폼을 좌측에 배치 -->
+            <div class="order-form">
+                <form method="POST" name="orderForm" onsubmit="return validateForm()">
+                    {% for item in meat_items %}
+                        <div>
+                            <label>{{ item.name }} ({{ item.price }}원)</label>
+                            <input type="checkbox" name="items" value="{{ item.name }}">
+                            <input type="number" name="quantities_{{ item.name }}" min="1" value="1">
+                        </div>
+                    {% endfor %}
+                    <h3>주문자 정보</h3>
+                    <label>주문자 성함:</label>
+                    <input type="text" name="sender_name" required><br>
+                    <label>주문자 연락처:</label>
+                    <input type="text" name="sender_contact" required><br>
+                    <label>주문자 주소:</label>
+                    <input type="text" name="sender_address" required><br>
+                    <h3>수령자 정보</h3>
+                    <label>수령자 성함:</label>
+                    <input type="text" name="receiver_name" required><br>
+                    <label>수령자 연락처:</label>
+                    <input type="text" name="receiver_contact" required><br>
+                    <label>수령자 주소:</label>
+                    <input type="text" name="receiver_address" required><br>
+                    <h3>실적인정번호</h3>
+                    <label>실적인정번호:</label>
+                    <input type="text" name="recognition_number" required><br>
+                    <button type="submit">주문 완료</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 안양축산농협. All rights reserved.</p>
+    </footer>
+
+    <style>
+        /* 새로운 레이아웃 설정 */
+        .order-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            width: 100%;
+        }
+
+        .order-form {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: slideUp 1s ease-out;
+        }
+
+        .existing-orders {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: slideUp 1s ease-out;
+        }
+
+        .link {
+            color: #ff7e5f;
+            font-size: 1.5rem;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+
+        .link:hover {
+            color: #feb47b;
+        }
+    </style>
 </body>
 </html>
