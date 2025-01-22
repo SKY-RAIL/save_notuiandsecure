@@ -7,21 +7,18 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(to right, #ff7e5f, #feb47b); /* 아름다운 배경 그라디언트 */
+    background: linear-gradient(to right, #ffea3d, #f9c700, #ff7e5f); /* 노란색과 다른 색을 섞은 그라디언트 배경 */
     color: white;
 }
 
 header {
-    background-image: url('https://www.example.com/beef-image.jpg'); /* 배경 이미지 추가 */
-    background-size: cover;
-    background-position: center;
-    height: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     padding: 20px;
     animation: fadeIn 2s ease-in-out;
+    position: relative;
 }
 
 .header-content h1 {
