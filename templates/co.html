@@ -38,75 +38,74 @@
             <p>고객님들의 배달 주문 내역을 확인하세요.</p>
         </div>
     </header>
-    
-    <main>
-        <a href="{{ url_for('index') }}" class="link">- 안양축산농협 -</a>
 
+    <main>
         <div class="order-form">
             <a href="{{ url_for('download_delivery_orders') }}">
-                <button>배달 주문 내역 다운로드 (메모장)</button>
+                <button class="button">배달 주문 내역 다운로드 (메모장)</button>
             </a>
-        </div>
 
-        {% if delivery_orders %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>주문자</th>
-                        <th>지점</th>
-                        <th>주문자 성함</th>
-                        <th>주문자 연락처</th>
-                        <th>주문자 주소</th>
-                        <th>수령자 성함</th>
-                        <th>수령자 연락처</th>
-                        <th>수령자 주소</th>
-                        <th>주문한 시간</th>
-                        {% for item in meat_items %}
-                            <th>{{ item.name }}</th>
-                        {% endfor %}
-                        <th>실적인정번호</th>
-                        <th>총 금액</th>
-                        <th>삭제</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for orders in delivery_orders.values() %}
-                        {% for order in orders %}
+            {% if delivery_orders %}
+                <div class="table-container">
+                    <table>
+                        <thead>
                             <tr>
-                                <td>{{ order.customer.name }}</td>
-                                <td>{{ order.customer.branch }}</td>
-                                <td>{{ order.sender.name }}</td>
-                                <td>{{ order.sender.contact }}</td>
-                                <td>{{ order.sender.address }}</td>
-                                <td>{{ order.receiver.name }}</td>
-                                <td>{{ order.receiver.contact }}</td>
-                                <td>{{ order.receiver.address }}</td>
-                                <td>{{ order.order_time }}</td>
-                                
+                                <th>주문자</th>
+                                <th>지점</th>
+                                <th>주문자 성함</th>
+                                <th>주문자 연락처</th>
+                                <th>주문자 주소</th>
+                                <th>수령자 성함</th>
+                                <th>수령자 연락처</th>
+                                <th>수령자 주소</th>
+                                <th>주문한 시간</th>
                                 {% for item in meat_items %}
-                                    <td>
-                                        {% for detail in order.details %}
-                                            {% if detail.item == item.name %}
-                                                {{ detail.quantity }}개
-                                            {% endif %}
-                                        {% endfor %}
-                                    </td>
+                                    <th>{{ item.name }}</th>
                                 {% endfor %}
-                                <td>{{ order.recognition_number }}</td>
-                                <td>{{ order.total_price }}원</td>
-                                <td>
-                                    <form method="POST" action="{{ url_for('delete_delivery_order', customer_id=order.customer.id, order_index=loop.index0) }}">
-                                        <button type="submit">주문 삭제</button>
-                                    </form>
-                                </td>
+                                <th>실적인정번호</th>
+                                <th>총 금액</th>
+                                <th>삭제</th>
                             </tr>
-                        {% endfor %}
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p class="no-orders">현재 배달 주문이 없습니다.</p>
-        {% endif %}
+                        </thead>
+                        <tbody>
+                            {% for orders in delivery_orders.values() %}
+                                {% for order in orders %}
+                                    <tr>
+                                        <td>{{ order.customer.name }}</td>
+                                        <td>{{ order.customer.branch }}</td>
+                                        <td>{{ order.sender.name }}</td>
+                                        <td>{{ order.sender.contact }}</td>
+                                        <td>{{ order.sender.address }}</td>
+                                        <td>{{ order.receiver.name }}</td>
+                                        <td>{{ order.receiver.contact }}</td>
+                                        <td>{{ order.receiver.address }}</td>
+                                        <td>{{ order.order_time }}</td>
+                                        {% for item in meat_items %}
+                                            <td>
+                                                {% for detail in order.details %}
+                                                    {% if detail.item == item.name %}
+                                                        {{ detail.quantity }}개
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                        {% endfor %}
+                                        <td>{{ order.recognition_number }}</td>
+                                        <td>{{ order.total_price }}원</td>
+                                        <td>
+                                            <form method="POST" action="{{ url_for('delete_delivery_order', customer_id=order.customer.id, order_index=loop.index0) }}">
+                                                <button class="button" type="submit">주문 삭제</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="no-orders">현재 배달 주문이 없습니다.</p>
+            {% endif %}
+        </div>
     </main>
 
     <footer>

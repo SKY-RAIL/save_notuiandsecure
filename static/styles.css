@@ -7,8 +7,18 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(to right, #ffea3d, #f9c700, #ff7e5f); /* 노란색과 다른 색을 섞은 그라디언트 배경 */
+    background: linear-gradient(to right, #ffea3d, #f9c700, #ff7e5f);
     color: white;
+    animation: bodyFadeIn 1.5s ease-in-out;
+}
+
+@keyframes bodyFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 header {
@@ -19,11 +29,23 @@ header {
     padding: 20px;
     animation: fadeIn 2s ease-in-out;
     position: relative;
+    background: rgba(0, 0, 0, 0.3); /* 반투명 배경 추가 */
+    border-radius: 10px; /* 테두리 둥글게 */
 }
 
 .header-content h1 {
     font-size: 3rem;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    animation: textZoomIn 1.5s ease-in-out;
+}
+
+@keyframes textZoomIn {
+    from {
+        transform: scale(0.5);
+    }
+    to {
+        transform: scale(1);
+    }
 }
 
 header p {
@@ -37,6 +59,18 @@ main {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    animation: mainSlideIn 1.5s ease-out;
+}
+
+@keyframes mainSlideIn {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 /* 폼 스타일 */
@@ -46,6 +80,7 @@ main {
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     animation: slideUp 1s ease-out;
+    /* 확대 효과 제거: transition과 :hover 삭제 */
 }
 
 .order-form input[type="text"] {
@@ -55,6 +90,8 @@ main {
     border: none;
     border-radius: 5px;
     font-size: 1.2rem;
+    background: rgba(255, 255, 255, 0.2); /* 입력 필드 반투명 배경 */
+    color: white;
 }
 
 .buttons {
@@ -70,12 +107,13 @@ button {
     padding: 15px 30px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* 버튼 배경색과 크기 전환 효과 추가 */
     font-size: 1.2rem;
 }
 
 button:hover {
     background-color: #feb47b;
+    transform: scale(1.1);
 }
 
 /* 관리자 버튼 */
@@ -88,27 +126,6 @@ button.admin-button:hover {
     background-color: #45a049;
 }
 
-/* 애니메이션 */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateY(50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
 /* 푸터 스타일 */
 footer {
     text-align: center;
@@ -118,4 +135,59 @@ footer {
     bottom: 0;
     width: 100%;
     color: white;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* 미디어 쿼리: 화면 너비가 768px 이하일 때 적용 */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .header-content h1 {
+        font-size: 2rem; /* 제목 크기 줄임 */
+    }
+
+    .header-content p {
+        font-size: 1rem; /* 서브 텍스트 크기 줄임 */
+    }
+
+    main {
+        padding: 20px;
+    }
+
+    .order-container {
+        flex-direction: column; /* 세로로 배치 */
+        gap: 20px; /* 간격 조정 */
+    }
+
+    .order-form, .existing-orders {
+        flex: none;
+        width: 100%; /* 가로 폭을 화면에 맞춤 */
+    }
+
+    .order-form input[type="text"], .quantity-input {
+        font-size: 1rem;
+        padding: 8px;
+    }
+
+    .buttons {
+        flex-direction: column; /* 버튼을 세로로 배치 */
+        gap: 10px;
+    }
+
+    button {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
+
+    .link {
+        font-size: 1.2rem; /* 링크 텍스트 크기 조정 */
+        text-align: center;
+    }
+
+    footer {
+        font-size: 0.9rem; /* 푸터 텍스트 크기 줄임 */
+    }
 }

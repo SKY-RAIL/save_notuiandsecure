@@ -9,8 +9,8 @@
 <body>
     <header>
         <div class="header-content">
-            <h1>고기 주문 페이지 - 안양축산농협</h1>
-            <p>최고의 고기를 손쉽게 주문하세요!</p>
+            <h1>직접 수령 주문</h1>
+            <p>주문 정보를 입력하고 확인하세요</p>
         </div>
     </header>
 
@@ -40,14 +40,19 @@
             <div class="order-form">
                 <h2>주문 정보</h2>
                 <p><strong>이름:</strong> {{ customer.name }}</p>
-
+            
                 {% if not existing_order %}
                     <form method="POST">
                         {% for item in meat_items %}
-                            <div>
-                                <label>{{ item.name }} ({{ item.price }}원)</label>
-                                <input type="checkbox" name="items" value="{{ item.name }}">
-                                <input type="number" name="quantities_{{ item.name }}" min="1" value="1" class="quantity-input">
+                            <div class="order-item">
+                                <div class="item-info">
+                                    <label>{{ item.name }}</label>
+                                    <span>({{ item.price }}원)</span>
+                                </div>
+                                <div class="item-controls">
+                                    <input type="checkbox" name="items" value="{{ item.name }}">
+                                    <input type="number" name="quantities_{{ item.name }}" min="1" value="1" class="quantity-input">
+                                </div>
                             </div>
                         {% endfor %}
                         <label>실적인정번호:</label>
@@ -99,6 +104,29 @@
 
         .link:hover {
             color: #feb47b;
+        }
+        .order-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        }
+
+        .item-info {
+            flex: 1;
+             text-align: left;
+        }
+      
+        .item-controls {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+      
+         .quantity-input {
+            width: 50px;
+            text-align: center;
         }
     </style>
 </body>

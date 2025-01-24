@@ -5,6 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>주문 내역 확인</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+        }
+        td {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: black;
+        }
+        .no-orders {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -76,7 +101,7 @@
                     </table>
                 </div>
             {% else %}
-                <p>주문 내역이 없습니다.</p>
+                <p class="no-orders">현재 주문 내역이 없습니다.</p>
             {% endif %}
         </div>
     </main>

@@ -1,13 +1,22 @@
 #app.py 이 주석은 삭제하지 말 것
 
+from dotenv import load_dotenv  # 추가
+load_dotenv()
+
 from flask import Flask, render_template, request, redirect, url_for, flash, session, Response
 from people import get_customer_by_id
 from meat import meat_items
 from datetime import datetime
 import pytz  # 추가
+import os  # 추가
+
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # 세션을 위한 비밀키 설정
+
+
+app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY")  # .env 파일에서 SECRET_KEY 가져오기
 
 # 주문 내역을 저장할 딕셔너리
 orders = {}
@@ -187,7 +196,9 @@ def admin_action():
     password = request.form.get("password")
     action = request.form.get("action")
 
-    if password == "admin123":  # 비밀번호 검증
+    admin_password = os.getenv("ADMIN_PASSWORD")  # .env 파일에서 ADMIN_PASSWORD 가져오기
+
+    if password == admin_password:  # .env에서 불러온 비밀번호로 검증
         if action == "view_orders":
             return redirect(url_for("view_orders"))
         elif action == "co":
