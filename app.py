@@ -235,7 +235,7 @@ def download_orders():
     for item in meat_items:
         orders_text += f"{item['name']},"
     
-    orders_text += "실적인정번호,총 금액\n"
+    orders_text += "실적인정번호,총 금액,비고\n"
     
     for customer_id, order in orders.items():
         orders_text += f"{order['customer']['name']},{order['customer']['branch']},{order['customer']['name']},{''},{''},{''},{''},{''},{order['order_time']},"
@@ -249,7 +249,7 @@ def download_orders():
                     break
             orders_text += f"{quantity}개,"
         
-        orders_text += f"{order['recognition_number']},{order['total_price']}원\n"
+        orders_text += f"{order['recognition_number']},{order['total_price']}원,{order['remark']}\n"
 
     # 메모장 형식으로 반환
     return Response(
@@ -267,7 +267,7 @@ def download_delivery_orders():
     
     # 고기 품목을 다운로드 텍스트에 동적으로 추가
     delivery_orders_text += ",".join([item["name"] for item in meat_items])
-    delivery_orders_text += ",실적인정번호,총 금액\n"
+    delivery_orders_text += ",실적인정번호,총 금액,비고\n"
 
     for customer_id, orders_list in delivery_orders.items():
         for order in orders_list:
@@ -278,7 +278,7 @@ def download_delivery_orders():
                 quantity = next((detail['quantity'] for detail in order['details'] if detail['item'] == item['name']), 0)
                 delivery_orders_text += f"{quantity}개,"
             
-            delivery_orders_text += f"{order['recognition_number']},{order['total_price']}원\n"
+            delivery_orders_text += f"{order['recognition_number']},{order['total_price']}원,{order['remark']}\n"
 
     # 메모장 형식으로 반환
     return Response(
