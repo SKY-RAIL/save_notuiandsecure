@@ -29,6 +29,11 @@
             font-size: 1.2rem;
             text-align: center;
         }
+        .checkbox-cell input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -50,6 +55,7 @@
                     <table>
                         <thead>
                             <tr>
+                                <th>확인</th> <!-- 체크박스 추가 -->
                                 <th>주문자</th>
                                 <th>지점</th>
                                 <th>주문자 성함</th>
@@ -64,12 +70,16 @@
                                 {% endfor %}
                                 <th>실적인정번호</th>
                                 <th>총 금액</th>
+                                <th>비고</th>  <!-- 비고 열 추가 -->
                                 <th>삭제</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for order in orders.values() %}
                                 <tr>
+                                    <td class="checkbox-cell">
+                                        <input type="checkbox">
+                                    </td> <!-- 체크박스 열 -->
                                     <td>{{ order.customer.name }}</td>
                                     <td>{{ order.customer.branch }}</td>
                                     <td>{{ order.sender.name if order.sender else '' }}</td>
@@ -90,6 +100,7 @@
                                     {% endfor %}
                                     <td>{{ order.recognition_number }}</td>
                                     <td>{{ order.total_price }}원</td>
+                                    <td>{{ order.remark }}</td>  <!-- 비고 내용 출력 -->
                                     <td>
                                         <form method="POST" action="{{ url_for('delete_order', customer_id=order.customer.id) }}">
                                             <button class="button" type="submit">주문 삭제</button>

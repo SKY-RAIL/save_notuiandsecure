@@ -53,6 +53,7 @@
                             {% endfor %}
                             <li>실적인정번호: {{ order.recognition_number }}</li>
                             <li>총 금액: {{ order.total_price }}원</li>
+                            <li>비고: {{ order.remark }}</li>
                         </ul>
                         <form method="POST" action="{{ url_for('delete_delivery_order', customer_id=customer.id, order_index=loop.index0) }}">
                             <button type="submit">주문 삭제</button>
@@ -93,6 +94,9 @@
                     <h3>실적인정번호</h3>
                     <label>실적인정번호:</label>
                     <input type="text" name="recognition_number" required><br>
+                    <h3>비고</h3>
+                    <label>비고:</label>
+                    <input type="text" name="remark" class="text-input"><br>
                     <button type="submit">주문 완료</button>
                 </form>
             </div>
@@ -165,6 +169,17 @@
         .quantity-input {
         width: 50px;
         text-align: center;
+        }
+        
+        .text-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.1);
+            color: white;
         }
     </style>
 </body>

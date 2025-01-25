@@ -68,6 +68,8 @@ def hand(customer_id):
         selected_items = request.form.getlist("items")  # 선택된 품목
         order_details = []
         total_price = 0
+        remark = request.form.get("remark")  # 비고 데이터 가져오기
+
 
         for item in selected_items:
             quantity_field = f"quantities_{item}"
@@ -84,6 +86,8 @@ def hand(customer_id):
             "total_price": total_price,
             "order_time": order_time,
             "recognition_number": request.form.get("recognition_number"),
+            "remark": remark,  # 비고 데이터를 저장
+
         }
         flash("주문이 완료되었습니다.")
         return redirect(url_for("hand", customer_id=customer_id))
@@ -116,6 +120,7 @@ def car(customer_id):
         receiver_contact = request.form.get("receiver_contact")
         receiver_address = request.form.get("receiver_address")
         recognition_number = request.form.get("recognition_number")
+        remark = request.form.get("remark")  # 비고 데이터 가져오기
 
         if not all([sender_name, sender_contact, sender_address, receiver_name, receiver_contact, receiver_address, recognition_number]):
             flash("주문 정보를 올바르게 입력해주십시오")
@@ -154,7 +159,9 @@ def car(customer_id):
                 "address": receiver_address
             },
             "recognition_number": recognition_number,
-            "order_time": order_time
+            "order_time": order_time,
+            "remark": remark,  # 비고 데이터를 저장
+
         }
 
         if customer_id not in delivery_orders:

@@ -30,6 +30,7 @@
                     </ul>
                     <p><strong>실적인정번호:</strong> {{ existing_order.recognition_number }}</p>
                     <p><strong>총 금액:</strong> {{ existing_order.total_price }}원</p>
+                    <p><strong>비고:</strong> {{ existing_order.remark }}</p> <!-- 비고 표시 -->
                     <form method="POST" action="{{ url_for('delete_order', customer_id=customer.id) }}">
                         <button type="submit" class="button">주문 삭제</button>
                     </form>
@@ -57,6 +58,12 @@
                         {% endfor %}
                         <label>실적인정번호:</label>
                         <input type="text" name="recognition_number" required class="text-input"><br>
+
+                        <!-- 비고란 추가 -->
+                        <label>비고:</label>
+                        <input type="text" name="remark" class="text-input"><br>
+                        <!-- 비고란 추가 끝 -->
+
                         <button type="submit" class="button">주문 완료</button>
                     </form>
                 {% endif %}
@@ -105,16 +112,17 @@
         .link:hover {
             color: #feb47b;
         }
+
         .order-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
 
         .item-info {
             flex: 1;
-             text-align: left;
+            text-align: left;
         }
       
         .item-controls {
@@ -124,9 +132,20 @@
             align-items: center;
         }
       
-         .quantity-input {
+        .quantity-input {
             width: 50px;
             text-align: center;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.1);
+            color: white;
         }
     </style>
 </body>
